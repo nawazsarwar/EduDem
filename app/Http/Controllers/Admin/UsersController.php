@@ -7,6 +7,7 @@ use App\Http\Requests\MassDestroyUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Role;
+use App\Models\Team;
 use App\Models\User;
 use Gate;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class UsersController extends Controller
     {
         abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $users = User::with(['roles'])->get();
+        $users = User::with(['roles', 'team'])->get();
 
         return view('admin.users.index', compact('users'));
     }
@@ -29,7 +30,9 @@ class UsersController extends Controller
 
         $roles = Role::pluck('title', 'id');
 
-        return view('admin.users.create', compact('roles'));
+        $teams = Team::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        return view('admin.users.create', compact('roles', 'teams'));
     }
 
     public function store(StoreUserRequest $request)
@@ -46,9 +49,11 @@ class UsersController extends Controller
 
         $roles = Role::pluck('title', 'id');
 
-        $user->load('roles');
+        $teams = Team::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.users.edit', compact('roles', 'user'));
+        $user->load('roles', 'team');
+
+        return view('admin.users.edit', compact('roles', 'teams', 'user'));
     }
 
     public function update(UpdateUserRequest $request, User $user)
@@ -63,7 +68,7 @@ class UsersController extends Controller
     {
         abort_if(Gate::denies('user_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $user->load('roles');
+        $user->load('roles', 'team');
 
         return view('admin.users.show', compact('user'));
     }

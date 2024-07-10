@@ -87,14 +87,6 @@
                             {{ $notification->user->name ?? '' }}
                         </td>
                     </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.notification.fields.created_by') }}
-                        </th>
-                        <td>
-                            {{ $notification->created_by->name ?? '' }}
-                        </td>
-                    </tr>
                 </tbody>
             </table>
             <div class="form-group">

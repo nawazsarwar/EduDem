@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
+use App\Traits\MultiTenantModelTrait;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Member extends Model
 {
-    use SoftDeletes, HasFactory;
+    use SoftDeletes, MultiTenantModelTrait, Auditable, HasFactory;
 
     public $table = 'members';
 
@@ -73,6 +75,7 @@ class Member extends Model
         'created_at',
         'updated_at',
         'deleted_at',
+        'team_id',
     ];
 
     protected function serializeDate(DateTimeInterface $date)
@@ -108,5 +111,10 @@ class Member extends Model
     public function institution()
     {
         return $this->belongsTo(Institution::class, 'institution_id');
+    }
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class, 'team_id');
     }
 }

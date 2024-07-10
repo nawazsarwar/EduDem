@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
+use App\Traits\MultiTenantModelTrait;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Institution extends Model
 {
-    use SoftDeletes, HasFactory;
+    use SoftDeletes, MultiTenantModelTrait, Auditable, HasFactory;
 
     public $table = 'institutions';
 
@@ -27,6 +29,7 @@ class Institution extends Model
         'created_at',
         'updated_at',
         'deleted_at',
+        'team_id',
     ];
 
     public const LEVEL_SELECT = [
@@ -46,5 +49,10 @@ class Institution extends Model
     public function district()
     {
         return $this->belongsTo(District::class, 'district_id');
+    }
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class, 'team_id');
     }
 }

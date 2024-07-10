@@ -15,163 +15,88 @@
     </div>
 
     <div class="card-body">
-        <div class="table-responsive">
-            <table class=" table table-bordered table-striped table-hover datatable datatable-Notification">
-                <thead>
-                    <tr>
-                        <th width="10">
+        <table class=" table table-bordered table-striped table-hover ajaxTable datatable datatable-Notification">
+            <thead>
+                <tr>
+                    <th width="10">
 
-                        </th>
-                        <th>
-                            {{ trans('cruds.notification.fields.id') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.notification.fields.mode') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.notification.fields.type') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.notification.fields.status') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.notification.fields.data') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.notification.fields.try_count') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.notification.fields.done') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.notification.fields.remarks') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.notification.fields.user') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.notification.fields.created_by') }}
-                        </th>
-                        <th>
-                            &nbsp;
-                        </th>
-                    </tr>
-                    <tr>
-                        <td>
-                        </td>
-                        <td>
-                            <input class="search" type="text" placeholder="{{ trans('global.search') }}">
-                        </td>
-                        <td>
-                            <select class="search" strict="true">
-                                <option value>{{ trans('global.all') }}</option>
-                                @foreach(App\Models\Notification::MODE_SELECT as $key => $item)
-                                    <option value="{{ $item }}">{{ $item }}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td>
-                            <input class="search" type="text" placeholder="{{ trans('global.search') }}">
-                        </td>
-                        <td>
-                            <input class="search" type="text" placeholder="{{ trans('global.search') }}">
-                        </td>
-                        <td>
-                            <input class="search" type="text" placeholder="{{ trans('global.search') }}">
-                        </td>
-                        <td>
-                            <input class="search" type="text" placeholder="{{ trans('global.search') }}">
-                        </td>
-                        <td>
-                            <input class="search" type="text" placeholder="{{ trans('global.search') }}">
-                        </td>
-                        <td>
-                            <input class="search" type="text" placeholder="{{ trans('global.search') }}">
-                        </td>
-                        <td>
-                            <select class="search">
-                                <option value>{{ trans('global.all') }}</option>
-                                @foreach($users as $key => $item)
-                                    <option value="{{ $item->name }}">{{ $item->name }}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td>
-                            <select class="search">
-                                <option value>{{ trans('global.all') }}</option>
-                                @foreach($users as $key => $item)
-                                    <option value="{{ $item->name }}">{{ $item->name }}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td>
-                        </td>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($notifications as $key => $notification)
-                        <tr data-entry-id="{{ $notification->id }}">
-                            <td>
-
-                            </td>
-                            <td>
-                                {{ $notification->id ?? '' }}
-                            </td>
-                            <td>
-                                {{ App\Models\Notification::MODE_SELECT[$notification->mode] ?? '' }}
-                            </td>
-                            <td>
-                                {{ $notification->type ?? '' }}
-                            </td>
-                            <td>
-                                {{ $notification->status ?? '' }}
-                            </td>
-                            <td>
-                                {{ $notification->data ?? '' }}
-                            </td>
-                            <td>
-                                {{ $notification->try_count ?? '' }}
-                            </td>
-                            <td>
-                                {{ $notification->done ?? '' }}
-                            </td>
-                            <td>
-                                {{ $notification->remarks ?? '' }}
-                            </td>
-                            <td>
-                                {{ $notification->user->name ?? '' }}
-                            </td>
-                            <td>
-                                {{ $notification->created_by->name ?? '' }}
-                            </td>
-                            <td>
-                                @can('notification_show')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('admin.notifications.show', $notification->id) }}">
-                                        {{ trans('global.view') }}
-                                    </a>
-                                @endcan
-
-                                @can('notification_edit')
-                                    <a class="btn btn-xs btn-info" href="{{ route('admin.notifications.edit', $notification->id) }}">
-                                        {{ trans('global.edit') }}
-                                    </a>
-                                @endcan
-
-                                @can('notification_delete')
-                                    <form action="{{ route('admin.notifications.destroy', $notification->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
-                                    </form>
-                                @endcan
-
-                            </td>
-
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                    </th>
+                    <th>
+                        {{ trans('cruds.notification.fields.id') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.notification.fields.mode') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.notification.fields.type') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.notification.fields.status') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.notification.fields.data') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.notification.fields.try_count') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.notification.fields.done') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.notification.fields.remarks') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.notification.fields.user') }}
+                    </th>
+                    <th>
+                        &nbsp;
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
+                    </td>
+                    <td>
+                        <select class="search" strict="true">
+                            <option value>{{ trans('global.all') }}</option>
+                            @foreach(App\Models\Notification::MODE_SELECT as $key => $item)
+                                <option value="{{ $key }}">{{ $item }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
+                    </td>
+                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
+                    </td>
+                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
+                    </td>
+                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
+                    </td>
+                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
+                    </td>
+                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
+                    </td>
+                    <td>
+                        <select class="search">
+                            <option value>{{ trans('global.all') }}</option>
+                            @foreach($users as $key => $item)
+                                <option value="{{ $item->name }}">{{ $item->name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+            </thead>
+        </table>
     </div>
 </div>
 
@@ -184,14 +109,14 @@
     $(function () {
   let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
 @can('notification_delete')
-  let deleteButtonTrans = '{{ trans('global.datatables.delete') }}'
+  let deleteButtonTrans = '{{ trans('global.datatables.delete') }}';
   let deleteButton = {
     text: deleteButtonTrans,
     url: "{{ route('admin.notifications.massDestroy') }}",
     className: 'btn-danger',
     action: function (e, dt, node, config) {
-      var ids = $.map(dt.rows({ selected: true }).nodes(), function (entry) {
-          return $(entry).data('entry-id')
+      var ids = $.map(dt.rows({ selected: true }).data(), function (entry) {
+          return entry.id
       });
 
       if (ids.length === 0) {
@@ -213,12 +138,31 @@
   dtButtons.push(deleteButton)
 @endcan
 
-  $.extend(true, $.fn.dataTable.defaults, {
+  let dtOverrideGlobals = {
+    buttons: dtButtons,
+    processing: true,
+    serverSide: true,
+    retrieve: true,
+    aaSorting: [],
+    ajax: "{{ route('admin.notifications.index') }}",
+    columns: [
+      { data: 'placeholder', name: 'placeholder' },
+{ data: 'id', name: 'id' },
+{ data: 'mode', name: 'mode' },
+{ data: 'type', name: 'type' },
+{ data: 'status', name: 'status' },
+{ data: 'data', name: 'data' },
+{ data: 'try_count', name: 'try_count' },
+{ data: 'done', name: 'done' },
+{ data: 'remarks', name: 'remarks' },
+{ data: 'user_name', name: 'user.name' },
+{ data: 'actions', name: '{{ trans('global.actions') }}' }
+    ],
     orderCellsTop: true,
     order: [[ 1, 'desc' ]],
     pageLength: 100,
-  });
-  let table = $('.datatable-Notification:not(.ajaxTable)').DataTable({ buttons: dtButtons })
+  };
+  let table = $('.datatable-Notification').DataTable(dtOverrideGlobals);
   $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e){
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
@@ -245,7 +189,7 @@ table.on('column-visibility.dt', function(e, settings, column, state) {
           visibleColumnsIndexes.push(colIdx);
       });
   })
-})
+});
 
 </script>
 @endsection

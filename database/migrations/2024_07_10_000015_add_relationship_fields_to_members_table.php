@@ -17,6 +17,8 @@ class AddRelationshipFieldsToMembersTable extends Migration
             $table->foreign('home_state_id', 'home_state_fk_9933968')->references('id')->on('states');
             $table->unsignedBigInteger('institution_id')->nullable();
             $table->foreign('institution_id', 'institution_fk_9923232')->references('id')->on('institutions');
+            $table->unsignedBigInteger('team_id')->nullable();
+            $table->foreign('team_id', 'team_fk_9934718')->references('id')->on('teams');
         });
     }
 }

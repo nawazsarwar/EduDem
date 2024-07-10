@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
+use App\Traits\MultiTenantModelTrait;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Notification extends Model
 {
-    use SoftDeletes, HasFactory;
+    use SoftDeletes, MultiTenantModelTrait, Auditable, HasFactory;
 
     public $table = 'notifications';
 
@@ -33,10 +35,10 @@ class Notification extends Model
         'done',
         'remarks',
         'user_id',
-        'created_by_id',
         'created_at',
         'updated_at',
         'deleted_at',
+        'team_id',
     ];
 
     protected function serializeDate(DateTimeInterface $date)
@@ -49,8 +51,8 @@ class Notification extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function created_by()
+    public function team()
     {
-        return $this->belongsTo(User::class, 'created_by_id');
+        return $this->belongsTo(Team::class, 'team_id');
     }
 }

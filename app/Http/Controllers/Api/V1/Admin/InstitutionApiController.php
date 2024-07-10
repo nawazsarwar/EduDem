@@ -17,7 +17,7 @@ class InstitutionApiController extends Controller
     {
         abort_if(Gate::denies('institution_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return new InstitutionResource(Institution::with(['district'])->get());
+        return new InstitutionResource(Institution::with(['district', 'team'])->get());
     }
 
     public function store(StoreInstitutionRequest $request)
@@ -33,7 +33,7 @@ class InstitutionApiController extends Controller
     {
         abort_if(Gate::denies('institution_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return new InstitutionResource($institution->load(['district']));
+        return new InstitutionResource($institution->load(['district', 'team']));
     }
 
     public function update(UpdateInstitutionRequest $request, Institution $institution)
