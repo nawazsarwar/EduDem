@@ -11,8 +11,8 @@ class AddRelationshipFieldsToNotificationsTable extends Migration
         Schema::table('notifications', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id', 'user_fk_9923115')->references('id')->on('users');
-            $table->unsignedBigInteger('created_by_id')->nullable();
-            $table->foreign('created_by_id', 'created_by_fk_9923116')->references('id')->on('users');
+            $table->unsignedBigInteger('team_id')->nullable();
+            $table->foreign('team_id', 'team_fk_9934719')->references('id')->on('teams');
         });
     }
 }

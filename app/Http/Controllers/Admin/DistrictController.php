@@ -3,23 +3,62 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Traits\CsvImportTrait;
 use App\Http\Requests\MassDestroyDistrictRequest;
 use App\Http\Requests\StoreDistrictRequest;
 use App\Http\Requests\UpdateDistrictRequest;
 use App\Models\District;
+use App\Models\Team;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Yajra\DataTables\Facades\DataTables;
 
 class DistrictController extends Controller
 {
-    public function index()
+    use CsvImportTrait;
+
+    public function index(Request $request)
     {
         abort_if(Gate::denies('district_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $districts = District::all();
+        if ($request->ajax()) {
+            $query = District::with(['team'])->select(sprintf('%s.*', (new District)->table));
+            $table = Datatables::of($query);
 
-        return view('admin.districts.index', compact('districts'));
+            $table->addColumn('placeholder', '&nbsp;');
+            $table->addColumn('actions', '&nbsp;');
+
+            $table->editColumn('actions', function ($row) {
+                $viewGate      = 'district_show';
+                $editGate      = 'district_edit';
+                $deleteGate    = 'district_delete';
+                $crudRoutePart = 'districts';
+
+                return view('partials.datatablesActions', compact(
+                    'viewGate',
+                    'editGate',
+                    'deleteGate',
+                    'crudRoutePart',
+                    'row'
+                ));
+            });
+
+            $table->editColumn('id', function ($row) {
+                return $row->id ? $row->id : '';
+            });
+            $table->editColumn('name', function ($row) {
+                return $row->name ? $row->name : '';
+            });
+
+            $table->rawColumns(['actions', 'placeholder']);
+
+            return $table->make(true);
+        }
+
+        $teams = Team::get();
+
+        return view('admin.districts.index', compact('teams'));
     }
 
     public function create()
@@ -40,6 +79,8 @@ class DistrictController extends Controller
     {
         abort_if(Gate::denies('district_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
+        $district->load('team');
+
         return view('admin.districts.edit', compact('district'));
     }
 
@@ -53,6 +94,8 @@ class DistrictController extends Controller
     public function show(District $district)
     {
         abort_if(Gate::denies('district_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $district->load('team');
 
         return view('admin.districts.show', compact('district'));
     }

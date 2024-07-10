@@ -17,7 +17,7 @@ class StateApiController extends Controller
     {
         abort_if(Gate::denies('state_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return new StateResource(State::all());
+        return new StateResource(State::with(['team'])->get());
     }
 
     public function store(StoreStateRequest $request)
@@ -33,7 +33,7 @@ class StateApiController extends Controller
     {
         abort_if(Gate::denies('state_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return new StateResource($state);
+        return new StateResource($state->load(['team']));
     }
 
     public function update(UpdateStateRequest $request, State $state)

@@ -17,7 +17,7 @@ class NotificationsApiController extends Controller
     {
         abort_if(Gate::denies('notification_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return new NotificationResource(Notification::with(['user', 'created_by'])->get());
+        return new NotificationResource(Notification::with(['user', 'team'])->get());
     }
 
     public function store(StoreNotificationRequest $request)
@@ -33,7 +33,7 @@ class NotificationsApiController extends Controller
     {
         abort_if(Gate::denies('notification_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return new NotificationResource($notification->load(['user', 'created_by']));
+        return new NotificationResource($notification->load(['user', 'team']));
     }
 
     public function update(UpdateNotificationRequest $request, Notification $notification)

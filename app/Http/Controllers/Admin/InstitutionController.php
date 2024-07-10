@@ -3,26 +3,74 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Traits\CsvImportTrait;
 use App\Http\Requests\MassDestroyInstitutionRequest;
 use App\Http\Requests\StoreInstitutionRequest;
 use App\Http\Requests\UpdateInstitutionRequest;
 use App\Models\District;
 use App\Models\Institution;
+use App\Models\Team;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Yajra\DataTables\Facades\DataTables;
 
 class InstitutionController extends Controller
 {
-    public function index()
+    use CsvImportTrait;
+
+    public function index(Request $request)
     {
         abort_if(Gate::denies('institution_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $institutions = Institution::with(['district'])->get();
+        if ($request->ajax()) {
+            $query = Institution::with(['district', 'team'])->select(sprintf('%s.*', (new Institution)->table));
+            $table = Datatables::of($query);
+
+            $table->addColumn('placeholder', '&nbsp;');
+            $table->addColumn('actions', '&nbsp;');
+
+            $table->editColumn('actions', function ($row) {
+                $viewGate      = 'institution_show';
+                $editGate      = 'institution_edit';
+                $deleteGate    = 'institution_delete';
+                $crudRoutePart = 'institutions';
+
+                return view('partials.datatablesActions', compact(
+                    'viewGate',
+                    'editGate',
+                    'deleteGate',
+                    'crudRoutePart',
+                    'row'
+                ));
+            });
+
+            $table->editColumn('id', function ($row) {
+                return $row->id ? $row->id : '';
+            });
+            $table->editColumn('name', function ($row) {
+                return $row->name ? $row->name : '';
+            });
+            $table->addColumn('district_name', function ($row) {
+                return $row->district ? $row->district->name : '';
+            });
+
+            $table->editColumn('address', function ($row) {
+                return $row->address ? $row->address : '';
+            });
+            $table->editColumn('level', function ($row) {
+                return $row->level ? Institution::LEVEL_SELECT[$row->level] : '';
+            });
+
+            $table->rawColumns(['actions', 'placeholder', 'district']);
+
+            return $table->make(true);
+        }
 
         $districts = District::get();
+        $teams     = Team::get();
 
-        return view('admin.institutions.index', compact('districts', 'institutions'));
+        return view('admin.institutions.index', compact('districts', 'teams'));
     }
 
     public function create()
@@ -47,7 +95,7 @@ class InstitutionController extends Controller
 
         $districts = District::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $institution->load('district');
+        $institution->load('district', 'team');
 
         return view('admin.institutions.edit', compact('districts', 'institution'));
     }
@@ -63,7 +111,7 @@ class InstitutionController extends Controller
     {
         abort_if(Gate::denies('institution_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $institution->load('district');
+        $institution->load('district', 'team');
 
         return view('admin.institutions.show', compact('institution'));
     }
