@@ -42,6 +42,20 @@ class Member extends Model
         'Other'    => 'Other',
     ];
 
+    public static $searchable = [
+        'booth_name',
+        'booth_no',
+        'name',
+        'first_name',
+        'middle_name',
+        'last_name',
+        'email',
+        'mobile',
+        'department',
+        'subject',
+        'designation',
+    ];
+
     public const DISABILITY_TYPE_SELECT = [
         'Hearing Impairment'      => 'Hearing Impairment',
         'Intellectual Disability' => 'Intellectual Disability',
